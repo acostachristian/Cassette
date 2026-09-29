@@ -60,25 +60,25 @@ body{margin:0;background:var(--bg);font:13px/1.3 -apple-system,"Helvetica Neue",
    <svg viewBox="0 0 360 200" aria-hidden="true">
     <defs><pattern id="rib" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="2" height="4" fill="#4c3582"/></pattern><filter id="worn" x="-4%" y="-25%" width="108%" height="150%">
       <feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="2" seed="4" result="r"/>
-      <feDisplacementMap in="SourceGraphic" in2="r" scale="1.3" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feDisplacementMap in="SourceGraphic" in2="r" scale=".6" xChannelSelector="R" yChannelSelector="G" result="d"/>
       <feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="7" result="g"/>
-      <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -6 4.3" result="gm"/>
+      <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -6 4.9" result="gm"/>
       <feComposite in="d" in2="gm" operator="in" result="e"/>
       <feTurbulence type="fractalNoise" baseFrequency=".035 .09" numOctaves="2" seed="9" result="b"/>
-      <feColorMatrix in="b" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -3.2 2.5" result="bm"/>
+      <feColorMatrix in="b" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2 2" result="bm"/>
       <feComposite in="e" in2="bm" operator="in" result="f"/>
-      <feGaussianBlur in="f" stdDeviation=".3"/>
+      <feGaussianBlur in="f" stdDeviation=".2"/>
     </filter>
     <filter id="worn2" x="-4%" y="-25%" width="108%" height="150%">
       <feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="2" seed="11" result="r"/>
-      <feDisplacementMap in="SourceGraphic" in2="r" scale="1.3" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feDisplacementMap in="SourceGraphic" in2="r" scale=".6" xChannelSelector="R" yChannelSelector="G" result="d"/>
       <feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="14" result="g"/>
-      <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -6 4.3" result="gm"/>
+      <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -6 4.9" result="gm"/>
       <feComposite in="d" in2="gm" operator="in" result="e"/>
       <feTurbulence type="fractalNoise" baseFrequency=".035 .09" numOctaves="2" seed="21" result="b"/>
-      <feColorMatrix in="b" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -3.2 2.5" result="bm"/>
+      <feColorMatrix in="b" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2 2" result="bm"/>
       <feComposite in="e" in2="bm" operator="in" result="f"/>
-      <feGaussianBlur in="f" stdDeviation=".3"/>
+      <feGaussianBlur in="f" stdDeviation=".2"/>
     </filter>
     </defs>
     <rect width="360" height="200" fill="#2b1a4d"/>
@@ -93,7 +93,7 @@ body{margin:0;background:var(--bg);font:13px/1.3 -apple-system,"Helvetica Neue",
     <rect x="141" y="128" width="78" height="6" fill="#24151a"/>
     <path d="M14 152H346V198H14Z" fill="#3a2762"/>
     <path d="M44 200L58 152H302L316 200Z" fill="#311f56"/>
-    <text x="175" y="177" text-anchor="middle" font-size="7" font-style="italic" filter="url(#worn2)" fill="#d6b48a" font-family="Georgia,'Times New Roman',serif">Revenge</text>
+    <text x="175" y="177" text-anchor="middle" font-size="9" font-style="italic" filter="url(#worn2)" fill="#d6b48a" font-family="Georgia,'Times New Roman',serif">Revenge</text>
     <rect x="262" y="166" width="30" height="34" rx="1" fill="#7a2238"/><text x="277" y="191" text-anchor="middle" font-size="21" font-weight="800" fill="#e8c9c9" font-family="Arial,sans-serif">D</text>
    </svg>
    <div class="lab"><div class="t" id="ttl">Cassette</div><div class="m" id="art"></div></div>
