@@ -120,7 +120,7 @@ const mmss=ms=>{const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padS
 let ac;
 function clack(v){try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const n=ac.sampleRate*.045|0,b=ac.createBuffer(1,n,ac.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,4);const s=ac.createBufferSource();s.buffer=b;const f=ac.createBiquadFilter();f.type="lowpass";f.frequency.value=1800;const g=ac.createGain();g.gain.value=.35*v;s.connect(f);f.connect(g);g.connect(ac.destination);s.start()}catch(_){}}
 document.querySelectorAll(".key").forEach(k=>{k.addEventListener("pointerdown",()=>clack(1));k.addEventListener("pointerup",()=>clack(.5))});
-
+ 
 function setStatus(h){$("st").innerHTML=h}
 function render(){
   $("play").classList.toggle("down",conn&&S.has&&S.playing);
@@ -224,3 +224,4 @@ window.addEventListener("message",async e=>{
 </script>
 </body>
 </html>
+ 
