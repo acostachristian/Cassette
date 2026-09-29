@@ -48,6 +48,7 @@ body{margin:0;background:var(--bg);font:13px/1.3 -apple-system,"Helvetica Neue",
 .paste button{padding:8px 14px;border:0;border-radius:6px;background:var(--acc);color:#fff;font-weight:600;cursor:pointer}
 .login{display:block;margin:14px auto 0;padding:10px 20px;border:0;border-radius:20px;background:var(--acc);color:#fff;font-weight:600;font-size:14px;cursor:pointer}
 .st{text-align:center;color:var(--mut);font-size:11px;margin-top:10px;min-height:16px;word-break:break-all}
+.st a{color:var(--mut)}
 .st button{border:0;background:none;color:var(--mut);text-decoration:underline;font-size:11px;cursor:pointer;padding:0}
 [hidden]{display:none!important}
 </style>
@@ -124,7 +125,7 @@ const mmss=ms=>{const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padS
 let ac;
 function clack(v){try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const n=ac.sampleRate*.045|0,b=ac.createBuffer(1,n,ac.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,4);const s=ac.createBufferSource();s.buffer=b;const f=ac.createBiquadFilter();f.type="lowpass";f.frequency.value=1800;const g=ac.createGain();g.gain.value=.35*v;s.connect(f);f.connect(g);g.connect(ac.destination);s.start()}catch(_){}}
 document.querySelectorAll(".key").forEach(k=>{k.addEventListener("pointerdown",()=>clack(1));k.addEventListener("pointerup",()=>clack(.5))});
- 
+
 function setStatus(h){$("st").innerHTML=h}
 function render(){
   $("play").classList.toggle("down",conn&&S.has&&S.playing);
@@ -136,8 +137,8 @@ function showLogin(msg){
   $("login").hidden=false;$("ttl").textContent="Sin conexión";$("art").textContent="";render();
   setStatus((msg?msg+"<br>":"")+"Redirect URI: "+RURI);
 }
-async function prepare(){
-  verifier=b64(crypto.getRandomValues(new Uint8Array(48)));
+async function prepare(fresh){
+  verifier=(!fresh&&ls.get("sp_v"))||b64(crypto.getRandomValues(new Uint8Array(48)));
   ls.set("sp_v",verifier);
   const ch=b64(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(verifier)));
   authUrl="https://accounts.spotify.com/authorize?"+new URLSearchParams({client_id:CID,response_type:"code",redirect_uri:RURI,code_challenge_method:"S256",code_challenge:ch,scope:SCOPE});
@@ -146,9 +147,10 @@ $("login").onclick=()=>{
   if(!authUrl)return;
   let framed=true;try{framed=window.top!==window.self}catch(_){}
   if(framed){
-    const w=window.open(authUrl+"&state=pop","spotify","width=460,height=680");
-    if(!w)setStatus("Permite ventanas emergentes e intenta de nuevo.");
-    else{$("paste").hidden=false;setStatus("Inicia sesión en la ventana nueva, copia el código que aparece y pégalo aquí.")}
+    const u=authUrl+"&state=pop";
+    window.open(u,"spotify","width=460,height=680");
+    $("paste").hidden=false;
+    setStatus('Inicia sesión en la ventana o pestaña que se abrió, copia el código que aparece y pégalo aquí.<br>¿No se abrió nada? <a href="'+u.replace(/&/g,"&amp;")+'" target="_blank" rel="noopener">Abrir inicio de sesión</a>');
   }else location.href=authUrl+"&state=top";
 };
 $("go").onclick=async()=>{
@@ -163,7 +165,7 @@ async function tokenReq(params){
   tok={a:j.access_token,r:j.refresh_token||(tok&&tok.r),e:Date.now()+j.expires_in*1000};
   ls.set("sp_tok",JSON.stringify(tok));
 }
-async function exchange(code){await tokenReq({grant_type:"authorization_code",code,redirect_uri:RURI,code_verifier:verifier||ls.get("sp_v")})}
+async function exchange(code){await tokenReq({grant_type:"authorization_code",code,redirect_uri:RURI,code_verifier:verifier||ls.get("sp_v")});ls.del("sp_v")}
 async function access(){
   if(!tok)return null;
   if(tok.e<Date.now()+30000){try{await tokenReq({grant_type:"refresh_token",refresh_token:tok.r})}catch(_){tok=null;ls.del("sp_tok");return null}}
@@ -193,7 +195,7 @@ async function poll(){
   }catch(_){setStatus("Sin red, reintentando…")}
   pollT=setTimeout(poll,wait);
 }
-function logout(){tok=null;ls.del("sp_tok");clearTimeout(pollT);prepare().then(()=>showLogin())}
+function logout(){tok=null;ls.del("sp_tok");clearTimeout(pollT);prepare(true).then(()=>showLogin())}
 async function cmd(method,path,opt){
   if(!conn)return;
   if(opt)opt();render();
@@ -244,4 +246,3 @@ window.addEventListener("message",async e=>{
 </script>
 </body>
 </html>
- 
