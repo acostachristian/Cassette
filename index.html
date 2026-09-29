@@ -15,29 +15,34 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:var(--bg);font:13px/1.3 -apple-system,"Helvetica Neue",Arial,sans-serif;padding:12px;display:flex;justify-content:center}
 .wrap{width:100%;max-width:340px;container-type:inline-size}
-.frame{border-radius:5cqw;padding:3.2cqw;background:var(--nd),linear-gradient(145deg,#606060,#3b3b3b);box-shadow:0 1.6cqw 3.2cqw rgba(0,0,0,.35),inset 0 0 0 .3cqw rgba(255,255,255,.1)}
-.deck{border-radius:2.4cqw;overflow:hidden;background:var(--nl),repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 1px,rgba(0,0,0,.025) 1px 3px),linear-gradient(#e2e2e2,#c9c9ca 55%,#b9b9ba);box-shadow:inset 0 .4cqw .3cqw rgba(255,255,255,.85),0 0 0 .3cqw rgba(0,0,0,.55)}
-.win{margin:5.5cqw 5.5cqw 0;padding:1.4cqw;border-radius:2.6cqw;background:linear-gradient(#0d0d0d,#2a2a2a);box-shadow:0 .4cqw .4cqw rgba(255,255,255,.75),inset 0 0 0 .3cqw #6a6a6a}
-.cas{position:relative;aspect-ratio:360/200;border-radius:1.6cqw;overflow:hidden;box-shadow:inset 0 0 1.5cqw rgba(0,0,0,.6)}
+.frame{border-radius:1.6cqw;padding:.8cqw;background:var(--nd),linear-gradient(145deg,#606060,#3b3b3b);box-shadow:0 1.6cqw 3.2cqw rgba(0,0,0,.35),inset 0 0 0 .3cqw rgba(255,255,255,.1)}
+.deck{position:relative;border-radius:1cqw;overflow:hidden;background:var(--nl),repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 1px,rgba(0,0,0,.025) 1px 3px),linear-gradient(#9b9b9d,#818183 55%,#727274);box-shadow:inset 0 .4cqw .3cqw rgba(255,255,255,.85),0 0 0 .3cqw rgba(0,0,0,.55)}
+.win{margin:5.5cqw 5.5cqw 0}
+.cas{position:relative;aspect-ratio:360/200;border-radius:.6cqw;overflow:hidden}
+.cas:before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;box-shadow:inset 0 0 9cqw 0 rgba(0,0,0,.85)}
 .cas svg{position:absolute;inset:0;width:100%;height:100%;display:block}
-.cas:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,rgba(255,255,255,.2) 0,rgba(255,255,255,0) 38%,rgba(255,255,255,0) 62%,rgba(255,255,255,.08) 100%)}
-.lab{position:absolute;left:14.4%;right:5.6%;top:6%;height:29%;display:flex;flex-direction:column;justify-content:center;text-align:center;color:#1d1d1d;z-index:1}
-.lab .t{font-size:13px;font-size:3.9cqw;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-bottom:1px solid #8d8d8d;padding-bottom:.6cqw}
-.lab .m{font:12px ui-monospace,Menlo,Consolas,monospace;font:3.4cqw ui-monospace,Menlo,Consolas,monospace;letter-spacing:.2cqw;margin-top:.8cqw;color:#333}
+.cas:after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(112deg,transparent 30%,rgba(255,255,255,.11) 36%,rgba(255,255,255,.11) 43%,transparent 49%,transparent 54%,rgba(255,255,255,.07) 58%,rgba(255,255,255,.07) 60.5%,transparent 65%)}
+.lab{font-family:Georgia,"Times New Roman",serif;position:absolute;left:14.4%;right:5.6%;top:6%;height:29%;display:flex;flex-direction:column;justify-content:center;text-align:center;color:#ead2aa;z-index:1}
+.lab .t{font-size:13px;font-size:3.9cqw;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-bottom:1px solid rgba(234,210,170,.35);padding-bottom:.6cqw}
+.lab .m{font-size:12px;font-size:3.5cqw;margin-top:.8cqw;color:#c8b088;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lab .t{filter:url(#worn)}
+.lab .m{filter:url(#worn2)}
 .reel{transform-box:fill-box;transform-origin:center;animation:spin 2.2s linear infinite;animation-play-state:paused}
 .on .reel{animation-play-state:running}
 @keyframes spin{to{transform:rotate(360deg)}}
 .panel{position:relative;display:flex;justify-content:space-between;align-items:center;margin-top:4.5cqw;padding:4cqw 6cqw 3.4cqw;border-top:.3cqw solid rgba(0,0,0,.35);box-shadow:inset 0 .3cqw 0 rgba(255,255,255,.6)}
 .panel:before{content:"";position:absolute;left:50%;top:.2cqw;width:1.6cqw;height:1.6cqw;margin-left:-.8cqw;border-radius:50%;background:#333;box-shadow:0 .2cqw 0 rgba(255,255,255,.6)}
-.grille{width:9.5cqw;height:9.5cqw;border-radius:1.4cqw;background:radial-gradient(#6f6f6f .5cqw,transparent .75cqw) 0 0/1.5cqw 1.5cqw,linear-gradient(#cfcfcf,#bdbdbd);box-shadow:inset 0 .3cqw .6cqw rgba(0,0,0,.5),0 .25cqw 0 rgba(255,255,255,.75)}
+.grille{width:9.5cqw;height:9.5cqw;border-radius:.7cqw;background:linear-gradient(#b2b2b4,#9d9d9f);box-shadow:inset 0 .3cqw .6cqw rgba(0,0,0,.5),0 .25cqw 0 rgba(255,255,255,.55);padding:.4cqw}
 .durw{display:flex;align-items:center;gap:2.4cqw}
 .durw i{font-weight:800;font-size:3.3cqw;letter-spacing:.4cqw;color:#2a2a2a}
-.lcd{background:linear-gradient(#000,#161616);color:#f2f2f2;font:700 17px ui-monospace,Menlo,Consolas,monospace;font:700 5.4cqw ui-monospace,Menlo,Consolas,monospace;letter-spacing:.3cqw;padding:1.2cqw 3.2cqw;border-radius:2cqw;box-shadow:inset 0 0 .8cqw rgba(255,255,255,.12),0 .25cqw 0 rgba(255,255,255,.7)}
-.kl{display:grid;grid-template-columns:repeat(4,1fr);gap:1.8cqw;padding:0 5.6cqw;text-align:center;font-weight:800;font-size:11px;font-size:3.3cqw;letter-spacing:.2cqw;color:#222}
+.lcd{background:linear-gradient(#000,#161616);color:#f2f2f2;font:700 17px ui-monospace,Menlo,Consolas,monospace;font:700 5.4cqw ui-monospace,Menlo,Consolas,monospace;letter-spacing:.3cqw;padding:1.2cqw 3.2cqw;border-radius:.9cqw;box-shadow:inset 0 0 .8cqw rgba(255,255,255,.12),0 .25cqw 0 rgba(255,255,255,.7)}
+.kl{display:grid;grid-template-columns:repeat(4,1fr);gap:1.8cqw;padding:0 5.6cqw;text-align:center;font-weight:800;font-size:11px;font-size:3.3cqw;letter-spacing:.2cqw;color:#151515}
 .slot{display:grid;grid-template-columns:repeat(4,1fr);gap:1.8cqw;background:#0a0a0a;padding:2.4cqw 5.6cqw 0;margin-top:1.4cqw;box-shadow:inset 0 .5cqw 1cqw rgba(0,0,0,.9)}
-.key{position:relative;display:block;width:100%;height:19cqw;padding:0;border:0;border-radius:1.2cqw 1.2cqw 0 0;cursor:pointer;background:linear-gradient(#5a5a5f 0,#3f3f43 7%,#2f2f32 55%,#232326 100%);box-shadow:inset 0 .4cqw 0 rgba(255,255,255,.22),inset .3cqw 0 0 rgba(255,255,255,.06),inset -.3cqw 0 0 rgba(0,0,0,.45),0 -.25cqw 0 #000;transition:transform .06s,filter .06s}
+.key{position:relative;display:block;width:100%;height:19cqw;padding:0;border:0;border-radius:.5cqw .5cqw 0 0;cursor:pointer;background:linear-gradient(#5a5a5f 0,#3f3f43 7%,#2f2f32 55%,#232326 100%);box-shadow:inset 0 .4cqw 0 rgba(255,255,255,.22),inset .3cqw 0 0 rgba(255,255,255,.06),inset -.3cqw 0 0 rgba(0,0,0,.45),0 -.25cqw 0 #000;transition:transform .06s,filter .06s}
 .key:after{content:"";position:absolute;left:50%;bottom:3.2cqw;width:1.5cqw;height:1.5cqw;margin-left:-.75cqw;border-radius:50%;background:#77777c;box-shadow:-3cqw 0 #77777c,3cqw 0 #77777c,0 .2cqw 0 #000}
 .key.down,.key:active{transform:translateY(3cqw);filter:brightness(.78);box-shadow:inset 0 .3cqw 1.2cqw rgba(0,0,0,.65),0 -.25cqw 0 #000}
+#play{background:linear-gradient(#a3283d 0,#821c2f 7%,#681526 55%,#500e1b 100%)}
+#play:after{background:#d08d97;box-shadow:-3cqw 0 #d08d97,3cqw 0 #d08d97,0 .2cqw 0 #000}
 .login{display:block;margin:14px auto 0;padding:10px 20px;border:0;border-radius:20px;background:var(--acc);color:#fff;font-weight:600;font-size:14px;cursor:pointer}
 .st{text-align:center;color:var(--mut);font-size:11px;margin-top:10px;min-height:16px;word-break:break-all}
 .st button{border:0;background:none;color:var(--mut);text-decoration:underline;font-size:11px;cursor:pointer;padding:0}
@@ -49,27 +54,47 @@ body{margin:0;background:var(--bg);font:13px/1.3 -apple-system,"Helvetica Neue",
  <div class="frame"><div class="deck">
   <div class="win"><div class="cas" id="cas">
    <svg viewBox="0 0 360 200" aria-hidden="true">
-    <defs><pattern id="rib" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="2" height="4" fill="#48484c"/></pattern></defs>
-    <rect width="360" height="200" fill="#28282a"/>
-    <rect x="14" y="10" width="332" height="62" rx="4" fill="#f3f3f1"/>
-    <rect x="22" y="18" width="22" height="22" fill="#111"/><text x="33" y="34.5" text-anchor="middle" font-size="15" font-weight="700" fill="#fff" font-family="Arial,sans-serif">A</text>
+    <defs><pattern id="rib" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="2" height="4" fill="#4c3582"/></pattern><filter id="worn" x="-4%" y="-25%" width="108%" height="150%">
+      <feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="2" seed="4" result="r"/>
+      <feDisplacementMap in="SourceGraphic" in2="r" scale="1.3" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="7" result="g"/>
+      <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -6 4.3" result="gm"/>
+      <feComposite in="d" in2="gm" operator="in" result="e"/>
+      <feTurbulence type="fractalNoise" baseFrequency=".035 .09" numOctaves="2" seed="9" result="b"/>
+      <feColorMatrix in="b" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -3.2 2.5" result="bm"/>
+      <feComposite in="e" in2="bm" operator="in" result="f"/>
+      <feGaussianBlur in="f" stdDeviation=".3"/>
+    </filter>
+    <filter id="worn2" x="-4%" y="-25%" width="108%" height="150%">
+      <feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="2" seed="11" result="r"/>
+      <feDisplacementMap in="SourceGraphic" in2="r" scale="1.3" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="14" result="g"/>
+      <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -6 4.3" result="gm"/>
+      <feComposite in="d" in2="gm" operator="in" result="e"/>
+      <feTurbulence type="fractalNoise" baseFrequency=".035 .09" numOctaves="2" seed="21" result="b"/>
+      <feColorMatrix in="b" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -3.2 2.5" result="bm"/>
+      <feComposite in="e" in2="bm" operator="in" result="f"/>
+      <feGaussianBlur in="f" stdDeviation=".3"/>
+    </filter>
+    </defs>
+    <rect width="360" height="200" fill="#2b1a4d"/>
+    <rect x="14" y="10" width="332" height="62" rx="1.5" fill="#402a70"/>
+    <rect x="22" y="18" width="22" height="22" fill="#180e2c"/><text x="33" y="34.5" text-anchor="middle" font-size="15" font-weight="700" fill="#d6b48a" font-family="Arial,sans-serif">A</text>
     <rect x="14" y="84" width="48" height="64" fill="url(#rib)"/><rect x="298" y="84" width="48" height="64" fill="url(#rib)"/>
-    <rect x="62" y="84" width="236" height="64" rx="10" fill="#0f0f10"/>
-    <circle id="tl" cx="100" cy="116" r="30" fill="#4a2f1f"/><circle id="tr" cx="260" cy="116" r="21" fill="#4a2f1f"/>
-    <g transform="translate(100 116)"><g class="reel"><circle r="18" fill="#ececec"/><circle r="13" fill="#1c1c1c"/><path d="M7 0H13M3.5 6.06L6.5 11.26M-3.5 6.06L-6.5 11.26M-7 0H-13M-3.5 -6.06L-6.5 -11.26M3.5 -6.06L6.5 -11.26" stroke="#f2f2f2" stroke-width="2.6"/><circle r="6" fill="#1c1c1c"/></g></g>
-    <g transform="translate(260 116)"><g class="reel"><circle r="18" fill="#ececec"/><circle r="13" fill="#1c1c1c"/><path d="M7 0H13M3.5 6.06L6.5 11.26M-3.5 6.06L-6.5 11.26M-7 0H-13M-3.5 -6.06L-6.5 -11.26M3.5 -6.06L6.5 -11.26" stroke="#f2f2f2" stroke-width="2.6"/><circle r="6" fill="#1c1c1c"/></g></g>
-    <rect x="140" y="96" width="80" height="40" rx="3" fill="#0a0a0a" stroke="#4d4d50" stroke-width="1.5"/>
-    <rect x="141" y="128" width="78" height="6" fill="#3a2314"/>
-    <polygon points="158,110 186,110 186,103 204,116 186,129 186,122 158,122" fill="none" stroke="#a5a5a8" stroke-width="1.6"/>
-    <path d="M14 152H346V190Q346 200 336 200H24Q14 200 14 190Z" fill="#c9c9ca"/>
-    <path d="M44 200L58 152H302L316 200Z" fill="#b5b5b6"/>
-    <text x="175" y="171" text-anchor="middle" font-size="10" letter-spacing="2.4" fill="#87878a" font-family="Arial,sans-serif" font-weight="700">AUTO STOP</text>
-    <text x="175" y="185" text-anchor="middle" font-size="7" fill="#79797c" font-family="Arial,sans-serif">Normal Bias 120µs EQ</text>
-    <rect x="262" y="166" width="30" height="34" rx="2" fill="#d4456a"/><text x="277" y="191" text-anchor="middle" font-size="21" font-weight="800" fill="#fff" font-family="Arial,sans-serif">D</text>
+    <rect x="62" y="84" width="236" height="64" rx="6" fill="#0d0813"/>
+    <circle id="tl" cx="100" cy="116" r="30" fill="#24151a"/><circle id="tr" cx="260" cy="116" r="21" fill="#24151a"/>
+    <g transform="translate(100 116)"><g class="reel"><circle r="18" fill="#d6b48a"/><circle r="13" fill="#15101c"/><path d="M7 0H13M3.5 6.06L6.5 11.26M-3.5 6.06L-6.5 11.26M-7 0H-13M-3.5 -6.06L-6.5 -11.26M3.5 -6.06L6.5 -11.26" stroke="#d6b48a" stroke-width="2.6"/><circle r="6" fill="#15101c"/></g></g>
+    <g transform="translate(260 116)"><g class="reel"><circle r="18" fill="#d6b48a"/><circle r="13" fill="#15101c"/><path d="M7 0H13M3.5 6.06L6.5 11.26M-3.5 6.06L-6.5 11.26M-7 0H-13M-3.5 -6.06L-6.5 -11.26M3.5 -6.06L6.5 -11.26" stroke="#d6b48a" stroke-width="2.6"/><circle r="6" fill="#15101c"/></g></g>
+    <rect x="140" y="96" width="80" height="40" rx="2" fill="#0a0610" stroke="#5b4692" stroke-width="1.5"/>
+    <rect x="141" y="128" width="78" height="6" fill="#24151a"/>
+    <path d="M14 152H346V198H14Z" fill="#3a2762"/>
+    <path d="M44 200L58 152H302L316 200Z" fill="#311f56"/>
+    <text x="175" y="177" text-anchor="middle" font-size="7" font-style="italic" filter="url(#worn2)" fill="#d6b48a" font-family="Georgia,'Times New Roman',serif">Revenge</text>
+    <rect x="262" y="166" width="30" height="34" rx="1" fill="#7a2238"/><text x="277" y="191" text-anchor="middle" font-size="21" font-weight="800" fill="#e8c9c9" font-family="Arial,sans-serif">D</text>
    </svg>
-   <div class="lab"><div class="t" id="ttl">Cassette</div><div class="m" id="el">00:00</div></div>
+   <div class="lab"><div class="t" id="ttl">Cassette</div><div class="m" id="art"></div></div>
   </div></div>
-  <div class="panel"><div class="grille"></div><div class="durw"><i>DUR</i><div class="lcd" id="dur">00:00</div></div></div>
+  <div class="panel"><div class="grille"><svg viewBox="0 0 40 40" aria-hidden="true" style="display:block;width:100%;height:100%"><circle cx="5" cy="5.7" r="2.5" fill="rgba(255,255,255,.55)"/><circle cx="5" cy="5" r="2.4" fill="#2a2a2c"/><circle cx="15" cy="5.7" r="2.5" fill="rgba(255,255,255,.55)"/><circle cx="15" cy="5" r="2.4" fill="#2a2a2c"/><circle cx="25" cy="5.7" r="2.5" fill="rgba(255,255,255,.55)"/><circle cx="25" cy="5" r="2.4" fill="#2a2a2c"/><circle cx="35" cy="5.7" r="2.5" fill="rgba(255,255,255,.55)"/><circle cx="35" cy="5" r="2.4" fill="#2a2a2c"/><circle cx="10" cy="13.2" r="2.5" fill="rgba(255,255,255,.55)"/><circle cx="10" cy="12.5" r="2.4" fill="#2a2a2c"/><circle cx="20" cy="13.2" r="2.5" fill="rgba(255,255,255,.55)"/><circle cx="20" cy="12.5" r="2.4" fill="#2a2a2c"/><circle cx="30" cy="13.2" r="2.5" fill="rgba(255,255,255,.55)"/><circle cx="30" cy="12.5" r="2.4" fill="#2a2a2c"/><circle cx="5" cy="20.7" r="2.5" fill="rgba(255,255,255,.55)"/><circle cx="5" cy="20" r="2.4" fill="#2a2a2c"/><circle cx="15" cy="20.7" r="2.5" fill="rgba(255,255,255,.55)"/><circle cx="15" cy="20" r="2.4" fill="#2a2a2c"/><circle cx="25" cy="20.7" r="2.5" fill="rgba(255,255,255,.55)"/><circle cx="25" cy="20" r="2.4" fill="#2a2a2c"/><circle cx="35" cy="20.7" r="2.5" fill="rgba(255,255,255,.55)"/><circle cx="35" cy="20" r="2.4" fill="#2a2a2c"/><circle cx="10" cy="28.2" r="2.5" fill="rgba(255,255,255,.55)"/><circle cx="10" cy="27.5" r="2.4" fill="#2a2a2c"/><circle cx="20" cy="28.2" r="2.5" fill="rgba(255,255,255,.55)"/><circle cx="20" cy="27.5" r="2.4" fill="#2a2a2c"/><circle cx="30" cy="28.2" r="2.5" fill="rgba(255,255,255,.55)"/><circle cx="30" cy="27.5" r="2.4" fill="#2a2a2c"/><circle cx="5" cy="35.7" r="2.5" fill="rgba(255,255,255,.55)"/><circle cx="5" cy="35" r="2.4" fill="#2a2a2c"/><circle cx="15" cy="35.7" r="2.5" fill="rgba(255,255,255,.55)"/><circle cx="15" cy="35" r="2.4" fill="#2a2a2c"/><circle cx="25" cy="35.7" r="2.5" fill="rgba(255,255,255,.55)"/><circle cx="25" cy="35" r="2.4" fill="#2a2a2c"/><circle cx="35" cy="35.7" r="2.5" fill="rgba(255,255,255,.55)"/><circle cx="35" cy="35" r="2.4" fill="#2a2a2c"/></svg></div><div class="durw"><i>DUR</i><div class="lcd" id="dur">00:00</div></div></div>
   <div class="kl"><span>PREV</span><span>PLAY</span><span>PAUSE</span><span>NEXT</span></div>
   <div class="slot">
    <button class="key" id="prev" aria-label="Anterior"></button>
@@ -104,7 +129,7 @@ function render(){
 }
 function showLogin(msg){
   conn=false;S={playing:false,prog:0,dur:1,t0:Date.now(),has:false};
-  $("login").hidden=false;$("ttl").textContent="Sin conexión";render();
+  $("login").hidden=false;$("ttl").textContent="Sin conexión";$("art").textContent="";render();
   setStatus((msg?msg+"<br>":"")+"Redirect URI: "+RURI);
 }
 async function prepare(){
@@ -142,13 +167,13 @@ async function poll(){
     const r=await api("GET","/me/player");
     if(!r){showLogin("Sesión expirada.");return}
     conn=true;$("login").hidden=true;
-    if(r.status===204){S={playing:false,prog:0,dur:1,t0:Date.now(),has:false};$("ttl").textContent="Abre Spotify y dale play";setStatus("Sin dispositivo activo")}
+    if(r.status===204){S={playing:false,prog:0,dur:1,t0:Date.now(),has:false};$("ttl").textContent="Abre Spotify y dale play";$("art").textContent="";setStatus("Sin dispositivo activo")}
     else if(r.status===429){wait=(+r.headers.get("Retry-After")||5)*1000}
     else if(r.ok){
       const j=await r.json(),it=j.item;
       S={playing:!!j.is_playing,prog:j.progress_ms||0,dur:(it&&it.duration_ms)||1,t0:Date.now(),has:!!it};
       const art=it?(it.artists?it.artists.map(a=>a.name).join(", "):(it.show?it.show.name:"")):"";
-      $("ttl").textContent=it?(art?it.name+" — "+art:it.name):"Anuncio / sin datos";
+      $("ttl").textContent=it?it.name:"Anuncio / sin datos";$("art").textContent=art;
       setStatus(j.device?'En: '+j.device.name.replace(/</g,"&lt;")+' · <button id="out">salir</button>':"");
       const o=$("out");if(o)o.onclick=logout;
     }else if(r.status===403){setStatus("Spotify rechazó la petición (¿Premium activo y usuario autorizado en tu app?)")}
@@ -175,7 +200,7 @@ $("prev").onclick=()=>cmd("POST","/me/player/previous");
 setInterval(()=>{
   const pos=Math.min(S.dur,S.playing?S.prog+(Date.now()-S.t0):S.prog),p=S.has?Math.min(1,pos/S.dur):0;
   $("tl").setAttribute("r",30-9*p);$("tr").setAttribute("r",21+9*p);
-  $("el").textContent=S.has?mmss(pos):"00:00";$("dur").textContent=S.has?mmss(S.dur):"00:00";
+  $("dur").textContent=S.has?mmss(S.dur):"00:00";
 },250);
 window.addEventListener("message",async e=>{
   if(e.origin!==location.origin||!e.data||!e.data.sp_code)return;
