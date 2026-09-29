@@ -43,6 +43,9 @@ body{margin:0;background:var(--bg);font:13px/1.3 -apple-system,"Helvetica Neue",
 .key.down,.key:active{transform:translateY(3cqw);filter:brightness(.78);box-shadow:inset 0 .3cqw 1.2cqw rgba(0,0,0,.65),0 -.25cqw 0 #000}
 #play{background:linear-gradient(#a3283d 0,#821c2f 7%,#681526 55%,#500e1b 100%)}
 #play:after{background:#d08d97;box-shadow:-3cqw 0 #d08d97,3cqw 0 #d08d97,0 .2cqw 0 #000}
+.paste{display:flex;gap:6px;max-width:300px;margin:10px auto 0}
+.paste input{flex:1;min-width:0;padding:8px 10px;border:1px solid #999;border-radius:6px;font-size:13px;background:transparent;color:inherit}
+.paste button{padding:8px 14px;border:0;border-radius:6px;background:var(--acc);color:#fff;font-weight:600;cursor:pointer}
 .login{display:block;margin:14px auto 0;padding:10px 20px;border:0;border-radius:20px;background:var(--acc);color:#fff;font-weight:600;font-size:14px;cursor:pointer}
 .st{text-align:center;color:var(--mut);font-size:11px;margin-top:10px;min-height:16px;word-break:break-all}
 .st button{border:0;background:none;color:var(--mut);text-decoration:underline;font-size:11px;cursor:pointer;padding:0}
@@ -104,6 +107,7 @@ body{margin:0;background:var(--bg);font:13px/1.3 -apple-system,"Helvetica Neue",
   </div>
  </div></div>
  <button class="login" id="login" hidden>Conectar Spotify</button>
+ <div class="paste" id="paste" hidden><input id="code" placeholder="Pega aquí el código" autocomplete="off" spellcheck="false"><button id="go">Listo</button></div>
  <div class="st" id="st"></div>
 </div>
 <script>
@@ -141,8 +145,16 @@ async function prepare(){
 $("login").onclick=()=>{
   if(!authUrl)return;
   let framed=true;try{framed=window.top!==window.self}catch(_){}
-  if(framed){const w=window.open(authUrl,"spotify","width=460,height=680");if(!w)setStatus("Permite ventanas emergentes e intenta de nuevo, o abre esta página directamente.")}
-  else location.href=authUrl;
+  if(framed){
+    const w=window.open(authUrl+"&state=pop","spotify","width=460,height=680");
+    if(!w)setStatus("Permite ventanas emergentes e intenta de nuevo.");
+    else{$("paste").hidden=false;setStatus("Inicia sesión en la ventana nueva, copia el código que aparece y pégalo aquí.")}
+  }else location.href=authUrl+"&state=top";
+};
+$("go").onclick=async()=>{
+  const c=$("code").value.trim();if(!c)return;
+  try{await exchange(c);$("code").value="";poll()}
+  catch(_){setStatus("Código inválido o vencido. Pulsa Conectar Spotify otra vez.")}
 };
 async function tokenReq(params){
   const r=await fetch("https://accounts.spotify.com/api/token",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:new URLSearchParams({client_id:CID,...params})});
@@ -166,7 +178,7 @@ async function poll(){
   try{
     const r=await api("GET","/me/player");
     if(!r){showLogin("Sesión expirada.");return}
-    conn=true;$("login").hidden=true;
+    conn=true;$("login").hidden=true;$("paste").hidden=true;
     if(r.status===204){S={playing:false,prog:0,dur:1,t0:Date.now(),has:false};$("ttl").textContent="Abre Spotify y dale play";$("art").textContent="";setStatus("Sin dispositivo activo")}
     else if(r.status===429){wait=(+r.headers.get("Retry-After")||5)*1000}
     else if(r.ok){
@@ -209,10 +221,18 @@ window.addEventListener("message",async e=>{
 (async()=>{
   const q=new URLSearchParams(location.search),code=q.get("code");
   if(code){
-    if(window.opener&&!window.opener.closed){
-      window.opener.postMessage({sp_code:code},location.origin);
-      document.body.textContent="Conectado. Puedes cerrar esta ventana.";
-      setTimeout(()=>window.close(),700);return;
+    if(q.get("state")==="pop"){
+      if(window.opener&&!window.opener.closed){
+        try{window.opener.postMessage({sp_code:code},location.origin);
+        document.body.textContent="Conectado. Puedes cerrar esta ventana.";
+        setTimeout(()=>window.close(),700);return}catch(_){}
+      }
+      const box=document.createElement("div");box.style.cssText="max-width:320px;text-align:center;color:var(--mut);font-size:14px";
+      const p=document.createElement("p");p.textContent="Casi listo. Copia este código y pégalo en el cassette:";
+      const ta=document.createElement("textarea");ta.readOnly=true;ta.value=code;ta.rows=5;ta.style.cssText="width:100%;padding:8px;font:12px ui-monospace,Menlo,monospace;border:1px solid #999;border-radius:6px;background:transparent;color:inherit;word-break:break-all";
+      const b=document.createElement("button");b.textContent="Copiar código";b.className="login";
+      b.onclick=async()=>{ta.select();try{await navigator.clipboard.writeText(code)}catch(_){document.execCommand&&document.execCommand("copy")}b.textContent="¡Copiado!"};
+      box.append(p,ta,b);document.body.textContent="";document.body.append(box);return;
     }
     try{await exchange(code)}catch(_){}
     history.replaceState(null,"",location.pathname);
