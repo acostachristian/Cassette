@@ -118,6 +118,7 @@ const SCOPE="user-read-playback-state user-modify-playback-state user-read-curre
 const $=id=>document.getElementById(id);
 const ls={get:k=>{try{return localStorage.getItem(k)}catch(_){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}},del:k=>{try{localStorage.removeItem(k)}catch(_){}}};
 const b64=b=>btoa(String.fromCharCode(...new Uint8Array(b))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(_){}
 let verifier=null,authUrl=null,tok=null,pollT=null,conn=false;
 let S={playing:false,prog:0,dur:1,t0:Date.now(),has:false};
 const mmss=ms=>{const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")};
@@ -160,7 +161,7 @@ $("go").onclick=async()=>{
 };
 async function tokenReq(params){
   const r=await fetch("https://accounts.spotify.com/api/token",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:new URLSearchParams({client_id:CID,...params})});
-  if(!r.ok)throw new Error("token "+r.status);
+  if(!r.ok){const e=new Error("token "+r.status);e.status=r.status;throw e}
   const j=await r.json();
   tok={a:j.access_token,r:j.refresh_token||(tok&&tok.r),e:Date.now()+j.expires_in*1000};
   ls.set("sp_tok",JSON.stringify(tok));
@@ -168,12 +169,14 @@ async function tokenReq(params){
 async function exchange(code){await tokenReq({grant_type:"authorization_code",code,redirect_uri:RURI,code_verifier:verifier||ls.get("sp_v")});ls.del("sp_v")}
 async function access(){
   if(!tok)return null;
-  if(tok.e<Date.now()+30000){try{await tokenReq({grant_type:"refresh_token",refresh_token:tok.r})}catch(_){tok=null;ls.del("sp_tok");return null}}
+  if(tok.e<Date.now()+30000){try{await tokenReq({grant_type:"refresh_token",refresh_token:tok.r})}catch(e){if(e.status===400||e.status===401){tok=null;ls.del("sp_tok");return null}throw e}}
   return tok.a;
 }
-async function api(method,path){
+async function api(method,path,retry){
   const t=await access();if(!t)return null;
-  return fetch("https://api.spotify.com/v1"+path,{method,headers:{Authorization:"Bearer "+t}});
+  const r=await fetch("https://api.spotify.com/v1"+path,{method,headers:{Authorization:"Bearer "+t}});
+  if(r.status===401&&!retry&&tok){tok.e=0;return api(method,path,true)}
+  return r;
 }
 async function poll(){
   clearTimeout(pollT);let wait=3000;
@@ -247,3 +250,4 @@ window.addEventListener("message",async e=>{
 </body>
 </html>
  
+
