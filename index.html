@@ -184,7 +184,7 @@ async function poll(){
     const r=await api("GET","/me/player");
     if(!r){showLogin("Sesión expirada.");return}
     conn=true;$("login").hidden=true;$("paste").hidden=true;
-    if(r.status===204){S={playing:false,prog:0,dur:1,t0:Date.now(),has:false};$("ttl").textContent="Abre Spotify y dale play";$("art").textContent="";setStatus("Sin dispositivo activo")}
+    if(r.status===204){S={playing:false,prog:0,dur:1,t0:Date.now(),has:false};$("ttl").textContent="Through Patches of Violet";$("art").textContent="";setStatus("Sin dispositivo activo")}
     else if(r.status===429){wait=(+r.headers.get("Retry-After")||5)*1000}
     else if(r.ok){
       const j=await r.json(),it=j.item;
@@ -204,7 +204,7 @@ async function cmd(method,path,opt){
   if(opt)opt();render();
   try{
     const r=await api(method,path);
-    if(r&&r.status===404)setStatus("Abre Spotify en tu PC y dale play primero.");
+    if(r&&r.status===404)setStatus("Through Patches of Violet");
     else if(r&&r.status===403)setStatus("Spotify rechazó el comando (necesita Premium).");
   }catch(_){}
   setTimeout(poll,500);
