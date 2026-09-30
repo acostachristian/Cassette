@@ -120,6 +120,7 @@ const ls={get:k=>{try{return localStorage.getItem(k)}catch(_){return null}},set:
 const b64=b=>btoa(String.fromCharCode(...new Uint8Array(b))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(_){}
 let storeOk=false;try{localStorage.setItem("sp_t","1");storeOk=localStorage.getItem("sp_t")==="1";localStorage.removeItem("sp_t")}catch(_){}
+const SAVED=storeOk?" · sesión guardada":"<br>⚠ Este navegador no guarda la sesión: se perderá al recargar.";
 let verifier=null,authUrl=null,tok=null,pollT=null,conn=false;
 let S={playing:false,prog:0,dur:1,t0:Date.now(),has:false};
 const mmss=ms=>{const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")};
@@ -127,7 +128,7 @@ const mmss=ms=>{const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padS
 let ac;
 function clack(v){try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const n=ac.sampleRate*.045|0,b=ac.createBuffer(1,n,ac.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,4);const s=ac.createBufferSource();s.buffer=b;const f=ac.createBiquadFilter();f.type="lowpass";f.frequency.value=1800;const g=ac.createGain();g.gain.value=.35*v;s.connect(f);f.connect(g);g.connect(ac.destination);s.start()}catch(_){}}
 document.querySelectorAll(".key").forEach(k=>{k.addEventListener("pointerdown",()=>clack(1));k.addEventListener("pointerup",()=>clack(.5))});
-
+ 
 function setStatus(h){$("st").innerHTML=h}
 function render(){
   $("play").classList.toggle("down",conn&&S.has&&S.playing);
@@ -194,14 +195,14 @@ async function poll(){
     const r=await api("GET","/me/player");
     if(!r){showLogin("Sesión expirada"+(dropWhy?" ("+dropWhy.replace(/</g,"&lt;")+")":"")+".");return}
     conn=true;$("login").hidden=true;$("paste").hidden=true;
-    if(r.status===204){S={playing:false,prog:0,dur:1,t0:Date.now(),has:false};$("ttl").textContent="Abre Spotify y dale play";$("art").textContent="";setStatus("Sin dispositivo activo")}
+    if(r.status===204){S={playing:false,prog:0,dur:1,t0:Date.now(),has:false};$("ttl").textContent="Abre Spotify y dale play";$("art").textContent="";setStatus("Sin dispositivo activo"+SAVED)}
     else if(r.status===429){wait=(+r.headers.get("Retry-After")||5)*1000}
     else if(r.ok){
       const j=await r.json(),it=j.item;
       S={playing:!!j.is_playing,prog:j.progress_ms||0,dur:(it&&it.duration_ms)||1,t0:Date.now(),has:!!it};
       const art=it?(it.artists?it.artists.map(a=>a.name).join(", "):(it.show?it.show.name:"")):"";
       $("ttl").textContent=it?it.name:"Anuncio / sin datos";$("art").textContent=art;
-      setStatus(j.device?'En: '+j.device.name.replace(/</g,"&lt;")+ ' · <button id="out">salir</button>'+(storeOk?"":'<br>⚠ Este navegador no guarda la sesión: se perderá al recargar.'):"");
+      setStatus(j.device?'En: '+j.device.name.replace(/</g,"&lt;")+ ' · <button id="out">salir</button>'+SAVED:"");
       const o=$("out");if(o)o.onclick=logout;
     }else if(r.status===403){setStatus("Spotify rechazó la petición (¿Premium activo y usuario autorizado en tu app?)")}
     render();
