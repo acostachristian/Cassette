@@ -119,6 +119,7 @@ const $=id=>document.getElementById(id);
 const ls={get:k=>{try{return localStorage.getItem(k)}catch(_){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}},del:k=>{try{localStorage.removeItem(k)}catch(_){}}};
 const b64=b=>btoa(String.fromCharCode(...new Uint8Array(b))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(_){}
+let storeOk=false;try{localStorage.setItem("sp_t","1");storeOk=localStorage.getItem("sp_t")==="1";localStorage.removeItem("sp_t")}catch(_){}
 let verifier=null,authUrl=null,tok=null,pollT=null,conn=false;
 let S={playing:false,prog:0,dur:1,t0:Date.now(),has:false};
 const mmss=ms=>{const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")};
@@ -126,7 +127,7 @@ const mmss=ms=>{const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padS
 let ac;
 function clack(v){try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const n=ac.sampleRate*.045|0,b=ac.createBuffer(1,n,ac.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,4);const s=ac.createBufferSource();s.buffer=b;const f=ac.createBiquadFilter();f.type="lowpass";f.frequency.value=1800;const g=ac.createGain();g.gain.value=.35*v;s.connect(f);f.connect(g);g.connect(ac.destination);s.start()}catch(_){}}
 document.querySelectorAll(".key").forEach(k=>{k.addEventListener("pointerdown",()=>clack(1));k.addEventListener("pointerup",()=>clack(.5))});
- 
+
 function setStatus(h){$("st").innerHTML=h}
 function render(){
   $("play").classList.toggle("down",conn&&S.has&&S.playing);
@@ -161,16 +162,25 @@ $("go").onclick=async()=>{
 };
 async function tokenReq(params){
   const r=await fetch("https://accounts.spotify.com/api/token",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:new URLSearchParams({client_id:CID,...params})});
-  if(!r.ok){const e=new Error("token "+r.status);e.status=r.status;throw e}
+  if(!r.ok){let d={};try{d=await r.json()}catch(_){}const e=new Error("token "+r.status);e.status=r.status;e.detail=(d.error||"")+(d.error_description?": "+d.error_description:"");throw e}
   const j=await r.json();
   tok={a:j.access_token,r:j.refresh_token||(tok&&tok.r),e:Date.now()+j.expires_in*1000};
   ls.set("sp_tok",JSON.stringify(tok));
 }
 async function exchange(code){await tokenReq({grant_type:"authorization_code",code,redirect_uri:RURI,code_verifier:verifier||ls.get("sp_v")});ls.del("sp_v")}
+let refreshing=null,dropWhy="";
 async function access(){
   if(!tok)return null;
-  if(tok.e<Date.now()+30000){try{await tokenReq({grant_type:"refresh_token",refresh_token:tok.r})}catch(e){if(e.status===400||e.status===401){tok=null;ls.del("sp_tok");return null}throw e}}
-  return tok.a;
+  if(tok.e<Date.now()+30000){
+    try{
+      refreshing=refreshing||tokenReq({grant_type:"refresh_token",refresh_token:tok.r}).finally(()=>{refreshing=null});
+      await refreshing;
+    }catch(e){
+      if(e.status===400||e.status===401){dropWhy=e.detail||("HTTP "+e.status);tok=null;ls.del("sp_tok");return null}
+      throw e;
+    }
+  }
+  return tok?tok.a:null;
 }
 async function api(method,path,retry){
   const t=await access();if(!t)return null;
@@ -182,16 +192,16 @@ async function poll(){
   clearTimeout(pollT);let wait=3000;
   try{
     const r=await api("GET","/me/player");
-    if(!r){showLogin("Sesión expirada.");return}
+    if(!r){showLogin("Sesión expirada"+(dropWhy?" ("+dropWhy.replace(/</g,"&lt;")+")":"")+".");return}
     conn=true;$("login").hidden=true;$("paste").hidden=true;
-    if(r.status===204){S={playing:false,prog:0,dur:1,t0:Date.now(),has:false};$("ttl").textContent="Through Patches of Violet";$("art").textContent="";setStatus("Sin dispositivo activo")}
+    if(r.status===204){S={playing:false,prog:0,dur:1,t0:Date.now(),has:false};$("ttl").textContent="Abre Spotify y dale play";$("art").textContent="";setStatus("Sin dispositivo activo")}
     else if(r.status===429){wait=(+r.headers.get("Retry-After")||5)*1000}
     else if(r.ok){
       const j=await r.json(),it=j.item;
       S={playing:!!j.is_playing,prog:j.progress_ms||0,dur:(it&&it.duration_ms)||1,t0:Date.now(),has:!!it};
       const art=it?(it.artists?it.artists.map(a=>a.name).join(", "):(it.show?it.show.name:"")):"";
       $("ttl").textContent=it?it.name:"Anuncio / sin datos";$("art").textContent=art;
-      setStatus(j.device?'En: '+j.device.name.replace(/</g,"&lt;")+' · <button id="out">salir</button>':"");
+      setStatus(j.device?'En: '+j.device.name.replace(/</g,"&lt;")+ ' · <button id="out">salir</button>'+(storeOk?"":'<br>⚠ Este navegador no guarda la sesión: se perderá al recargar.'):"");
       const o=$("out");if(o)o.onclick=logout;
     }else if(r.status===403){setStatus("Spotify rechazó la petición (¿Premium activo y usuario autorizado en tu app?)")}
     render();
@@ -204,7 +214,7 @@ async function cmd(method,path,opt){
   if(opt)opt();render();
   try{
     const r=await api(method,path);
-    if(r&&r.status===404)setStatus("Through Patches of Violet");
+    if(r&&r.status===404)setStatus("Abre Spotify en tu PC y dale play primero.");
     else if(r&&r.status===403)setStatus("Spotify rechazó el comando (necesita Premium).");
   }catch(_){}
   setTimeout(poll,500);
@@ -249,5 +259,3 @@ window.addEventListener("message",async e=>{
 </script>
 </body>
 </html>
- 
-
